@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#18364b">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Cuaderno de Viña">
+<link rel="manifest" href="manifest.json">\n<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<title>Cuaderno de Viña · Viñacastin</title>
+<style>
+:root{--navy:#18364b;--navy2:#244b61;--ivory:#f6f2e8;--paper:#fffdf8;--ink:#26343b;--muted:#68767a;--line:#e5dfd2;--green:#587665;--gold:#b99b64;--danger:#9c4e45}
+*{box-sizing:border-box} body{margin:0;background:var(--ivory);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;padding-bottom:calc(82px + env(safe-area-inset-bottom))}
+header{background:var(--navy);color:var(--ivory);padding:calc(18px + env(safe-area-inset-top)) 20px 22px;border-radius:0 0 24px 24px}
+.header-logo{display:block;width:min(100%,340px);height:auto;aspect-ratio:3/2;object-fit:contain;margin:0 auto 8px;border-radius:12px}.brand{font-family:Georgia,serif;font-size:28px;margin:6px 0 4px;font-weight:500}.subtitle{font-size:13px;opacity:.8}
+main{max-width:700px;margin:0 auto;padding:18px 16px}.section-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:8px 0 14px}.section-head h2{font-size:20px;margin:0;font-weight:650}
+select,input,textarea,button{font:inherit} select,input,textarea{width:100%;border:1px solid var(--line);border-radius:12px;background:#fffefa;padding:12px;color:var(--ink);outline-color:var(--gold)} textarea{min-height:80px;resize:vertical}
+label{display:block;font-size:12px;font-weight:650;color:var(--muted);margin:12px 0 6px}
+button{border:0;border-radius:12px;padding:12px 15px;cursor:pointer;font-weight:650}.primary{background:var(--navy);color:white}.secondary{background:#e8e1d3;color:var(--navy)}.small{padding:9px 11px;font-size:13px}
+.cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:14px 0 22px}.stat{background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:15px}.stat .num{font-size:25px;font-weight:700;color:var(--navy)}.stat .cap{font-size:12px;color:var(--muted);margin-top:4px}
+.panel{background:var(--paper);border:1px solid var(--line);border-radius:18px;padding:16px;margin:12px 0}.panel h3{margin:0 0 7px;font-size:15px}.hint{font-size:13px;color:var(--muted);line-height:1.45}
+.quick-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.quick{background:var(--paper);border:1px solid var(--line);border-radius:15px;padding:14px;text-align:left;color:var(--ink);min-height:85px}.quick .emoji{font-size:21px;display:block;margin-bottom:8px}.quick .qtitle{font-weight:700;font-size:14px}.quick .qsub{font-size:12px;color:var(--muted);margin-top:4px}
+.filters{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin:12px 0}.entry{background:var(--paper);border:1px solid var(--line);border-radius:15px;padding:14px;margin:10px 0}.entry-top{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}.entry-title{font-weight:700;font-size:15px}.entry-date{font-size:12px;color:var(--muted);white-space:nowrap}.tag{display:inline-block;font-size:11px;border-radius:99px;padding:5px 8px;background:#e9eee8;color:#365a49;margin:7px 0}.entry-note{font-size:13px;line-height:1.45;white-space:pre-wrap}.entry-actions{display:flex;justify-content:flex-end;margin-top:10px}.empty{text-align:center;padding:28px 15px;color:var(--muted)}.empty .big{font-size:30px;margin-bottom:8px}
+nav{position:fixed;z-index:5;bottom:0;left:0;right:0;padding:8px 10px calc(8px + env(safe-area-inset-bottom));display:grid;grid-template-columns:repeat(3,1fr);gap:6px;background:rgba(255,253,248,.96);backdrop-filter:blur(12px);border-top:1px solid var(--line)}
+nav button{background:transparent;color:var(--muted);font-size:12px;padding:8px 4px}nav button.active{background:#e7e1d5;color:var(--navy)}nav .navicon{display:block;font-size:18px;margin-bottom:3px}
+.screen{display:none}.screen.active{display:block}
+.modal{display:none;position:fixed;inset:0;z-index:10;background:rgba(13,29,38,.55);align-items:flex-end;justify-content:center}.modal.open{display:flex}.sheet{background:var(--ivory);width:100%;max-width:700px;max-height:92dvh;overflow:auto;border-radius:22px 22px 0 0;padding:18px 18px calc(22px + env(safe-area-inset-bottom))}.sheet-head{display:flex;justify-content:space-between;align-items:center;gap:12px}.sheet-head h2{margin:0;font-size:20px}.close{background:#e6dfd2;color:var(--navy);padding:8px 12px}.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:0 10px}.full{grid-column:1/-1}.form-buttons{display:flex;gap:10px;margin-top:18px}.form-buttons button{flex:1}
+.tools{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.tools button,.filelabel{font-size:13px}.filelabel{display:inline-block;border-radius:12px;padding:12px 14px;background:#e8e1d3;color:var(--navy);font-weight:650;cursor:pointer}
+.notice{font-size:12px;color:var(--muted);line-height:1.5;margin-top:10px}
+@media(min-width:600px){.cards{grid-template-columns:repeat(4,minmax(0,1fr))}.quick-grid{grid-template-columns:repeat(4,minmax(0,1fr))}.modal{align-items:center;padding:20px}.sheet{border-radius:22px}}
+</style>
+</head>
+<body>
+<header>
+  <img class="header-logo" src="logo-vinacastin.png" alt="Logotipo VT de Viñacastin" />
+  <div class="brand">Cuaderno de Viña</div>
+  <div class="subtitle">Viñacastin · Ribeira Sacra · Tu viña, campaña a campaña.</div>
+</header>
+<main>
+  <section id="home" class="screen active">
+    <div class="section-head"><h2>Resumen de campaña</h2><select id="homeVintage" aria-label="Seleccionar añada" style="width:112px;padding:9px"></select></div>
+    <div class="cards">
+      <div class="stat"><div class="num" id="statTotal">0</div><div class="cap">Registros en esta añada</div></div>
+      <div class="stat"><div class="num" id="statTreat">0</div><div class="cap">Tratamientos</div></div>
+      <div class="stat"><div class="num" id="statWeather">0</div><div class="cap">Incidencias clima</div></div>
+      <div class="stat"><div class="num" id="statHarvest">0</div><div class="cap">Registros de vendimia</div></div>
+    </div>
+    <div class="section-head"><h2>Anotar algo</h2></div>
+    <div class="quick-grid">
+      <button class="quick" data-new="Tratamiento"><span class="emoji">🧴</span><div class="qtitle">Tratamiento</div><div class="qsub">Producto, dosis y motivo</div></button>
+      <button class="quick" data-new="Clima e incidencia"><span class="emoji">🌦️</span><div class="qtitle">Clima / incidencia</div><div class="qsub">Helada, lluvia, granizo…</div></button>
+      <button class="quick" data-new="Plantación"><span class="emoji">🌱</span><div class="qtitle">Plantación</div><div class="qsub">Cepas nuevas o reposición</div></button>
+      <button class="quick" data-new="Vendimia"><span class="emoji">🍇</span><div class="qtitle">Vendimia</div><div class="qsub">Fecha, kilos y maduración</div></button>
+    </div>
+    <div class="panel">
+      <h3>Últimos apuntes</h3><div id="recent"></div>
+    </div>
+  </section>
+  <section id="records" class="screen">
+    <div class="section-head"><h2>Cuaderno</h2><button class="primary small" id="newRecord">＋ Añadir</button></div>
+    <div class="filters"><select id="filterVintage" aria-label="Filtrar por añada"></select><select id="filterType" aria-label="Filtrar por tipo"><option value="">Todos los tipos</option><option>Tratamiento</option><option>Clima e incidencia</option><option>Plantación</option><option>Vendimia</option><option>Observación</option></select></div>
+    <div id="recordList"></div>
+  </section>
+  <section id="backup" class="screen">
+    <div class="section-head"><h2>Datos y copias</h2></div>
+    <div class="panel">
+      <h3>Exportar cuaderno</h3><p class="hint">Guarda una copia de todos tus registros en un archivo JSON. Hazlo periódicamente y antes de cambiar de iPhone.</p>
+      <button class="primary" id="exportBtn" style="width:100%">Exportar copia de seguridad</button>
+    </div>
+    <div class="panel">
+      <h3>Importar una copia</h3><p class="hint">Recupera un archivo exportado anteriormente. Los registros importados se añaden a los existentes; no se borrará lo que ya tengas.</p>
+      <label class="filelabel" for="importFile">Elegir archivo de copia</label><input id="importFile" type="file" accept=".json,application/json" hidden>
+    </div>
+    <div class="panel">
+      <h3>Cómo se guardan tus datos</h3><p class="hint">El prototipo guarda los apuntes en el almacenamiento local del navegador de este dispositivo. No hay cuenta ni sincronización automática. La instalación PWA necesita servirse desde una web segura (HTTPS); una vez cargada, la app podrá abrirse sin conexión.</p>
+      <div class="tools"><button class="secondary" id="demoBtn">Cargar datos de ejemplo</button><button class="secondary" id="clearBtn">Borrar todos los datos</button></div>
+    </div>
+    <p class="notice">Prototipo inicial · Viñacastin. No sustituye las instrucciones oficiales de los productos fitosanitarios; registra siempre dosis, condiciones y plazos según su etiqueta.</p>
+  </section>
+</main>
+<nav>
+  <button class="active" data-screen="home"><span class="navicon">⌂</span>Inicio</button>
+  <button data-screen="records"><span class="navicon">☷</span>Cuaderno</button>
+  <button data-screen="backup"><span class="navicon">↥</span>Copias</button>
+</nav>
+<div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="formTitle">
+ <div class="sheet">
+  <div class="sheet-head"><h2 id="formTitle">Nuevo apunte</h2><button class="close" id="closeModal" aria-label="Cerrar">✕</button></div>
+  <form id="entryForm">
+   <div class="form-grid">
+    <div><label for="fType">Tipo de registro *</label><select id="fType" required><option>Tratamiento</option><option>Clima e incidencia</option><option>Plantación</option><option>Vendimia</option><option>Observación</option></select></div>
+    <div><label for="fVintage">Añada *</label><input id="fVintage" type="number" min="2000" max="2100" required></div>
+    <div><label for="fDate">Fecha *</label><input id="fDate" type="date" required></div>
+    <div><label for="fTitle">Título *</label><input id="fTitle" placeholder="Ej. Azufre, helada…" required maxlength="100"></div>
+    <div class="full"><label for="fDetail">Detalles específicos</label><input id="fDetail" placeholder="Producto, variedad, tipo de incidencia…"></div>
+    <div><label for="fAmount">Cantidad / dosis</label><input id="fAmount" placeholder="Ej. 2 kg, 35 cepas…"></div>
+    <div><label for="fArea">Parcela / zona</label><input id="fArea" placeholder="Ej. Viña principal"></div>
+    <div class="full"><label for="fNotes">Observaciones</label><textarea id="fNotes" placeholder="Tiempo, motivo, resultado, kilos recogidos…"></textarea></div>
+   </div>
+   <div class="form-buttons"><button type="button" class="secondary" id="cancelForm">Cancelar</button><button type="submit" class="primary">Guardar apunte</button></div>
+  </form>
+ </div>
+</div>
+<script>
+const KEY='vinacastin-cuaderno-v1';
+let entries=[];
+const $=id=>document.getElementById(id);
+const nowDate=()=>{const d=new Date();return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`};
+const currentYear=new Date().getFullYear();
+function load(){try{entries=JSON.parse(localStorage.getItem(KEY)||'[]');if(!Array.isArray(entries))entries=[]}catch(e){entries=[]}}
+function save(){localStorage.setItem(KEY,JSON.stringify(entries));render()}
+function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function fmtDate(s){if(!s)return '';let [y,m,d]=s.split('-');return `${d}/${m}/${y}`}
+function years(){let ys=new Set([currentYear,...entries.map(e=>Number(e.vintage)).filter(Boolean)]);return [...ys].sort((a,b)=>b-a)}
+function fillYears(){let ys=years();['homeVintage','filterVintage'].forEach(id=>{let el=$(id),old=Number(el.value)||currentYear;el.innerHTML=ys.map(y=>`<option value="${y}">${y}</option>`).join('');el.value=ys.includes(old)?old:currentYear})}
+function typeIcon(t){return {'Tratamiento':'🧴','Clima e incidencia':'🌦️','Plantación':'🌱','Vendimia':'🍇','Observación':'📝'}[t]||'📝'}
+function entryHTML(e,withDelete=true){return `<article class="entry"><div class="entry-top"><div><div class="entry-title">${typeIcon(e.type)} ${esc(e.title)}</div><span class="tag">${esc(e.type)} · Añada ${esc(e.vintage)}</span></div><div class="entry-date">${fmtDate(e.date)}</div></div>${e.detail?`<div class="hint"><b>Detalle:</b> ${esc(e.detail)}</div>`:''}${e.amount?`<div class="hint"><b>Cantidad/dosis:</b> ${esc(e.amount)}</div>`:''}${e.area?`<div class="hint"><b>Zona:</b> ${esc(e.area)}</div>`:''}${e.notes?`<div class="entry-note" style="margin-top:8px">${esc(e.notes)}</div>`:''}${withDelete?`<div class="entry-actions"><button class="secondary small" data-delete="${esc(e.id)}">Eliminar</button></div>`:''}</article>`}
+function render(){fillYears();let y=Number($('homeVintage').value)||currentYear;let camp=entries.filter(e=>Number(e.vintage)===y);$('statTotal').textContent=camp.length;$('statTreat').textContent=camp.filter(e=>e.type==='Tratamiento').length;$('statWeather').textContent=camp.filter(e=>e.type==='Clima e incidencia').length;$('statHarvest').textContent=camp.filter(e=>e.type==='Vendimia').length;
+let recent=[...camp].sort((a,b)=>b.date.localeCompare(a.date)).slice(0,3);$('recent').innerHTML=recent.length?recent.map(e=>entryHTML(e,false)).join(''):'<div class="empty"><div class="big">🌿</div><b>La campaña empieza aquí</b><p class="hint">Añade tu primer apunte con los botones de arriba.</p></div>';
+let fy=Number($('filterVintage').value)||y,ft=$('filterType').value;let list=entries.filter(e=>Number(e.vintage)===fy&&(!ft||e.type===ft)).sort((a,b)=>b.date.localeCompare(a.date));$('recordList').innerHTML=list.length?list.map(e=>entryHTML(e)).join(''):'<div class="empty"><div class="big">📔</div><b>No hay apuntes con estos filtros</b><p class="hint">Prueba otra añada o añade un registro nuevo.</p></div>'}
+function openForm(type='Tratamiento'){ $('entryForm').reset();$('fType').value=type;$('fVintage').value=Number($('homeVintage').value)||currentYear;$('fDate').value=nowDate();$('modal').classList.add('open');setTimeout(()=>$('fTitle').focus(),100)}
+function closeForm(){$('modal').classList.remove('open')}
+document.querySelectorAll('nav button').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('nav button').forEach(x=>x.classList.toggle('active',x===b));document.querySelectorAll('.screen').forEach(s=>s.classList.toggle('active',s.id===b.dataset.screen));if(b.dataset.screen==='records')render()}));
+document.querySelectorAll('[data-new]').forEach(b=>b.addEventListener('click',()=>openForm(b.dataset.new)));
+$('newRecord').addEventListener('click',()=>openForm($('filterType').value||'Tratamiento'));
+$('closeModal').addEventListener('click',closeForm);$('cancelForm').addEventListener('click',closeForm);
+$('modal').addEventListener('click',e=>{if(e.target===$('modal'))closeForm()});
+$('entryForm').addEventListener('submit',e=>{e.preventDefault();entries.push({id:crypto.randomUUID?crypto.randomUUID():String(Date.now())+Math.random(),type:$('fType').value,vintage:Number($('fVintage').value),date:$('fDate').value,title:$('fTitle').value.trim(),detail:$('fDetail').value.trim(),amount:$('fAmount').value.trim(),area:$('fArea').value.trim(),notes:$('fNotes').value.trim(),createdAt:new Date().toISOString()});closeForm();$('homeVintage').value=$('fVintage').value;$('filterVintage').value=$('fVintage').value;save()});
+$('homeVintage').addEventListener('change',render);$('filterVintage').addEventListener('change',render);$('filterType').addEventListener('change',render);
+document.addEventListener('click',e=>{let b=e.target.closest('[data-delete]');if(b&&confirm('¿Eliminar este apunte? Esta acción no se puede deshacer.')){entries=entries.filter(x=>x.id!==b.dataset.delete);save()}});
+$('exportBtn').addEventListener('click',()=>{let data={app:'Cuaderno de Viña Viñacastin',version:1,exportedAt:new Date().toISOString(),entries};let blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});let url=URL.createObjectURL(blob);let a=document.createElement('a');a.href=url;a.download=`vinacastin-copia-${nowDate()}.json`;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000)});
+$('importFile').addEventListener('change',async e=>{let f=e.target.files[0];if(!f)return;try{let data=JSON.parse(await f.text());let imported=Array.isArray(data)?data:data.entries;if(!Array.isArray(imported))throw Error('Formato no válido');let known=new Set(entries.map(x=>x.id));let add=imported.filter(x=>x&&x.title&&x.date&&x.type&&!known.has(x.id)).map(x=>({...x,id:x.id||String(Date.now())+Math.random()}));entries.push(...add);save();alert(`Importación completada: ${add.length} registro(s) añadido(s).`)}catch(err){alert('No se pudo importar el archivo. Comprueba que sea una copia de Cuaderno de Viña.')}e.target.value=''});
+$('demoBtn').addEventListener('click',()=>{if(entries.length&&!confirm('Se añadirán apuntes de ejemplo a los existentes. ¿Continuar?'))return;let y=currentYear;entries.push({id:'demo-t-'+Date.now(),type:'Tratamiento',vintage:y,date:nowDate(),title:'Ejemplo: tratamiento preventivo',detail:'Anota aquí el producto aplicado',amount:'Según etiqueta',area:'Viña principal',notes:'Registro de demostración. Sustituye estos datos por los reales.'},{id:'demo-w-'+Date.now(),type:'Clima e incidencia',vintage:y,date:nowDate(),title:'Ejemplo: lluvia',detail:'Lluvia después del tratamiento',amount:'',area:'Toda la parcela',notes:'Añade cantidad aproximada y posibles efectos.'});save()});
+$('clearBtn').addEventListener('click',()=>{if(confirm('¿Borrar todos los registros de este dispositivo? Exporta una copia antes si quieres conservarlos.')){entries=[];save()}});
+load();render();
+if('serviceWorker' in navigator && location.protocol.startsWith('http'))navigator.serviceWorker.register('./sw.js').catch(()=>{});
+</script>
+</body>
+</html>
