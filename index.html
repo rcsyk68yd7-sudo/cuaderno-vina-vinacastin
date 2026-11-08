@@ -112,8 +112,22 @@ function load(){try{entries=JSON.parse(localStorage.getItem(KEY)||'[]');if(!Arra
 function save(){localStorage.setItem(KEY,JSON.stringify(entries));render()}
 function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
 function fmtDate(s){if(!s)return '';let [y,m,d]=s.split('-');return `${d}/${m}/${y}`}
-function years(){let ys=new Set([currentYear,...entries.map(e=>Number(e.vintage)).filter(Boolean)]);return [...ys].sort((a,b)=>b-a)}
-function fillYears(){let ys=years();['homeVintage','filterVintage'].forEach(id=>{let el=$(id),old=Number(el.value)||currentYear;el.innerHTML=ys.map(y=>`<option value="${y}">${y}</option>`).join('');el.value=ys.includes(old)?old:currentYear})}
+function years(){
+  let ys=new Set([
+    ...Array.from({length:currentYear-2019+1},(_,i)=>2019+i),
+    ...entries.map(e=>Number(e.vintage)).filter(Boolean)
+  ]);
+  return [...ys].sort((a,b)=>b-a);
+}
+function fillYears(){
+  let ys=years();
+  ['homeVintage','filterVintage'].forEach(id=>{
+    let el=$(id);
+    let old=Number(el.value)||currentYear;
+    el.innerHTML=ys.map(y=>`<option value="${y}">${y}</option>`).join('');
+    el.value=ys.includes(old)?old:currentYear;
+  });
+}
 function typeIcon(t){return {'Tratamiento':'🧴','Clima e incidencia':'🌦️','Plantación':'🌱','Vendimia':'🍇','Observación':'📝'}[t]||'📝'}
 function entryHTML(e,withDelete=true){return `<article class="entry"><div class="entry-top"><div><div class="entry-title">${typeIcon(e.type)} ${esc(e.title)}</div><span class="tag">${esc(e.type)} · Añada ${esc(e.vintage)}</span></div><div class="entry-date">${fmtDate(e.date)}</div></div>${e.detail?`<div class="hint"><b>Detalle:</b> ${esc(e.detail)}</div>`:''}${e.amount?`<div class="hint"><b>Cantidad/dosis:</b> ${esc(e.amount)}</div>`:''}${e.area?`<div class="hint"><b>Zona:</b> ${esc(e.area)}</div>`:''}${e.notes?`<div class="entry-note" style="margin-top:8px">${esc(e.notes)}</div>`:''}${withDelete?`<div class="entry-actions"><button class="secondary small" data-delete="${esc(e.id)}">Eliminar</button></div>`:''}</article>`}
 function render(){fillYears();let y=Number($('homeVintage').value)||currentYear;let camp=entries.filter(e=>Number(e.vintage)===y);$('statTotal').textContent=camp.length;$('statTreat').textContent=camp.filter(e=>e.type==='Tratamiento').length;$('statWeather').textContent=camp.filter(e=>e.type==='Clima e incidencia').length;$('statHarvest').textContent=camp.filter(e=>e.type==='Vendimia').length;
